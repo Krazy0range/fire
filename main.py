@@ -20,9 +20,9 @@ HEIGHT_DIVISOR = 1.5
 GRID_WIDTH = int(terminal_dimensions[0] // (2 * TILING) // WIDTH_DIVISOR)
 GRID_HEIGHT = int(terminal_dimensions[1] // HEIGHT_DIVISOR) - 2
 _new_grid = [[BLACK for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
-NUM_PARTICLES = 250
+NUM_PARTICLES = 500
 PARTICLES_DELETION_RATE = 1
-TRAIL_LENGTH = 10
+TRAIL_LENGTH = 25
 FURROW_LENGTH = 50
 
 def new_grid():
@@ -89,7 +89,8 @@ def render(particles, trails, furrows):
     for furrow in furrows:
         for position in furrow:
             x, y, c = position
-            grid = set_grid_block(grid, x, y, GRAY)
+            # grid = set_grid_block(grid, x, y, GRAY)
+            grid[y][x] = GRAY
 
     # Render trails
     for trail in trails:
