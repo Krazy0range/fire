@@ -22,7 +22,7 @@ GRID_HEIGHT = int(terminal_dimensions[1] // HEIGHT_DIVISOR) - 2
 _new_grid = [[BLACK for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
 NUM_PARTICLES = 250
 PARTICLES_DELETION_RATE = 1
-TRAIL_LENGTH = 25
+TRAIL_LENGTH = 10
 FURROW_LENGTH = 50
 
 def new_grid():
