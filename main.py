@@ -4,22 +4,25 @@ import os
 
 BLACK = '\033[40m'
 GRAY = '\033[48;5;235m'
-WHITE = '\033[48;5;245m'
+WHITE = '\033[48;5;237m'
 FIRE0 = '\033[48;5;25m'
 BRIGHT_FIRE0 = '\033[48;5;27m'
 FIRE1 = '\033[48;5;208m'
 BRIGHT_FIRE1 = '\033[48;5;214m'
-FIRE2 = '\033[41m'
-BRIGHT_FIRE2 = '\033[0;101m'
+FIRE2 = '\033[48;5;1m'
+BRIGHT_FIRE2 = '\033[48;5;196m'
 RESET = '\033[0m'
 
+TILING = 1
 terminal_dimensions = os.get_terminal_size()
-GRID_WIDTH = terminal_dimensions[0] // 4
-GRID_HEIGHT = (terminal_dimensions[1] // 2) - 2
+WIDTH_DIVISOR = 1.5
+HEIGHT_DIVISOR = 1.5
+GRID_WIDTH = int(terminal_dimensions[0] // (2 * TILING) // WIDTH_DIVISOR)
+GRID_HEIGHT = int(terminal_dimensions[1] // HEIGHT_DIVISOR) - 2
 _new_grid = [[BLACK for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
-NUM_PARTICLES = 500
+NUM_PARTICLES = 250
 PARTICLES_DELETION_RATE = 1
-TRAIL_LENGTH = 10
+TRAIL_LENGTH = 20
 FURROW_LENGTH = 50
 
 def new_grid():
@@ -64,10 +67,19 @@ def check_position(position):
 
 def print_grid(grid):
     for y in range(GRID_HEIGHT):
-        for x in range(GRID_WIDTH):
-            print(f'{grid[y][x]}  {RESET}', end='')
+        for _ in range(TILING):
+            for x in range(GRID_WIDTH):
+                print(f'{grid[y][x]}  {RESET}', end='')
         print()
     print('\033[H\033[A')
+
+
+def set_grid_block(grid, x, y, color):
+    for _x in range(x - 1, x + 2):
+        for _y in range(y - 1, y + 2):
+            if _y >= 0 and _y < GRID_HEIGHT and _x >= 0 and _x < GRID_WIDTH:
+                grid[_y][_x] = color
+    return grid
 
 
 def render(particles, trails, furrows):
@@ -77,7 +89,7 @@ def render(particles, trails, furrows):
     for furrow in furrows:
         for position in furrow:
             x, y, c = position
-            grid[y][x] = GRAY
+            grid = set_grid_block(grid, x, y, GRAY)
 
     # Render trails
     for trail in trails:
@@ -101,6 +113,9 @@ def render(particles, trails, furrows):
             elif index <= TRAIL_LENGTH:
                 color = WHITE
 
+            # if color == WHITE:
+            #     grid = set_grid_block(grid, x, y, color)
+            # else:
             grid[y][x] = color
 
     # Render particles
@@ -162,14 +177,14 @@ particles = new_particles()
 trails = new_trails(particles)
 furrows = new_furrows(particles)
 
-os.system('cls')
+os.system('clear')
 
 # for _ in range(TRAIL_LENGTH):
 #     particles, trails = update(particles, trails)
     
-os.system('cls')
+os.system('clear')
 
 while True:
   particles, trails, furrows = update(particles, trails, furrows)
   render(particles, trails, furrows)
-  time.sleep(0.01)
+  time.sleep(0.1)
