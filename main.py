@@ -2,6 +2,8 @@ from random import randint
 import time
 import os
 
+# TODO: ADD REPLIT GITIGNORE FILE
+
 BLACK = '\033[40m'
 GRAY = '\033[48;5;235m'
 WHITE = '\033[48;5;245m'
